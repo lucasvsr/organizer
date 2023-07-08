@@ -1,0 +1,22 @@
+# configurações do serviço
+spring:
+  main:
+    allow-circular-references: true
+  application:
+    name: ${APP_NAME:organizer}
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/organizer}
+    username: ${DB_USER:postgres}
+    password: ${DB_PASSWORD:postgres}
+  flyway:
+    enabled: ${FLYWAY_ENABLED:true}
+    user: ${FLYWAY_USER:postgres}
+    password: ${FLYWAY_PASSWORD:postgres}
+    validate-on-migrate: ${FLYWAY_VALIDATE_ON_MIGRATE:true}
+    baseline-on-migrate: ${FLYWAY_BASELINE_ON_MIGRATE:true}
+    locations: classpath:/bd/migrations
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
