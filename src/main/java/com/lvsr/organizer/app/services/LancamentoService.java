@@ -2,7 +2,6 @@ package com.lvsr.organizer.app.services;
 
 import com.lvsr.organizer.app.dtos.ContaDTO;
 import com.lvsr.organizer.app.dtos.LancamentoDTO;
-import com.lvsr.organizer.app.dtos.UsuarioDTO;
 import com.lvsr.organizer.app.enums.TipoLancamentoEnum;
 import com.lvsr.organizer.app.exceptions.*;
 import com.lvsr.organizer.app.interfaces.IService;

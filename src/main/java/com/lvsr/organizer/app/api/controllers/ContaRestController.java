@@ -1,4 +1,4 @@
-package com.lvsr.organizer.app.controllers;
+package com.lvsr.organizer.app.api.controllers;
 
 import com.lvsr.organizer.app.dtos.ContaDTO;
 import com.lvsr.organizer.app.exceptions.NegocialException;
@@ -6,6 +6,7 @@ import com.lvsr.organizer.app.interfaces.IController;
 import com.lvsr.organizer.app.mappers.ContaMapper;
 import com.lvsr.organizer.app.repositories.ContaRepository;
 import com.lvsr.organizer.app.services.ContaService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,61 +40,29 @@ public class ContaRestController implements IController<ContaDTO> {
 
     @Override
     @GetMapping("/{id}")
-    public ResponseEntity<?> recupera(Long id) {
+    public ResponseEntity<?> recupera(Long id) throws NegocialException {
 
-        try {
-
-            return ResponseEntity.ok(service.recuperar(id));
-
-        } catch (NegocialException e) {
-
-            return ResponseEntity.status(e.getStatus()).body(e.getMessage());
-
-        }
+        return ResponseEntity.ok(service.recuperar(id));
 
     }
 
     @Override
     @PostMapping
-    public ResponseEntity<?> salvar(ContaDTO dto) {
+    public ResponseEntity<?> salvar(@Valid ContaDTO dto) throws NegocialException {
 
         HttpStatus status = Objects.nonNull(dto.getId()) ? HttpStatus.OK : HttpStatus.CREATED;
 
-        try {
+        return ResponseEntity.status(status).body(service.salvar(dto));
 
-            return ResponseEntity.status(status).body(service.salvar(dto));
 
-        } catch (NegocialException e) {
-
-            return ResponseEntity.status(e.getStatus()).body(e.getMessage());
-
-        } catch (Exception e) {
-
-            e.getStackTrace();
-            return ResponseEntity.internalServerError().build();
-
-        }
 
     }
 
     @Override
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> excluir(Long id) {
+    public ResponseEntity<?> excluir(Long id) throws NegocialException {
 
-        try {
-
-            return ResponseEntity.ok(service.excluir(id));
-
-        } catch (NegocialException e) {
-
-            return ResponseEntity.status(e.getStatus()).body(e.getMessage());
-
-        } catch (Exception e) {
-
-            e.getStackTrace();
-            return ResponseEntity.internalServerError().build();
-
-        }
+        return ResponseEntity.ok(service.excluir(id));
 
     }
 

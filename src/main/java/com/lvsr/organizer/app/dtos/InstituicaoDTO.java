@@ -1,17 +1,15 @@
 package com.lvsr.organizer.app.dtos;
 
-import com.lvsr.organizer.app.models.Conta;
-import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.List;
 
 @Getter
 @Setter
 public class InstituicaoDTO {
 
     private Long id;
+    @NotNull(message = "É necessário informar o nome da instituição")
     private String nome;
 
 }

@@ -1,18 +1,13 @@
 package com.lvsr.organizer.app.services;
 
 import com.lvsr.organizer.app.dtos.InstituicaoDTO;
-import com.lvsr.organizer.app.exceptions.ContaInexistenteException;
-import com.lvsr.organizer.app.exceptions.InstituicaoInexistenteException;
 import com.lvsr.organizer.app.exceptions.InstituicaoJaCadastradaException;
+import com.lvsr.organizer.app.exceptions.InstituicaoNaoEncontradaException;
 import com.lvsr.organizer.app.exceptions.NegocialException;
 import com.lvsr.organizer.app.interfaces.IService;
-import com.lvsr.organizer.app.mappers.ContaMapper;
 import com.lvsr.organizer.app.mappers.InstituicaoMapper;
-import com.lvsr.organizer.app.models.Conta;
 import com.lvsr.organizer.app.models.Instituicao;
-import com.lvsr.organizer.app.repositories.ContaRepository;
 import com.lvsr.organizer.app.repositories.InstituicaoRepository;
-import com.lvsr.organizer.app.repositories.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -49,7 +44,7 @@ public class InstituicaoService implements IService<InstituicaoDTO> {
 
         } else {
 
-            throw new InstituicaoInexistenteException();
+            throw new InstituicaoNaoEncontradaException();
 
         }
 
@@ -57,7 +52,7 @@ public class InstituicaoService implements IService<InstituicaoDTO> {
 
     @Override
     public InstituicaoDTO recuperar(Long id) throws NegocialException {
-        return id == null || id == 0L ? null : mapper.toDto(repository.findById(id).orElseThrow(InstituicaoInexistenteException::new));
+        return id == null || id == 0L ? null : mapper.toDto(repository.findById(id).orElseThrow(InstituicaoNaoEncontradaException::new));
     }
 
     @Override
