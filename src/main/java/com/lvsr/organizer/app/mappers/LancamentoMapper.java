@@ -9,9 +9,11 @@ import org.mapstruct.Mapping;
 public interface LancamentoMapper {
 
     @Mapping(source = "contaId", target = "conta.id")
+    @Mapping(source = "contaDono", target = "conta.dono.id")
     Lancamento toModel(LancamentoDTO dto);
 
     @Mapping(source = "conta.id", target = "contaId")
+    @Mapping(source = "conta.dono.id", target = "contaDono")
     LancamentoDTO toDto(Lancamento model);
 
 }

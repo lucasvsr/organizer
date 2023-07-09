@@ -1,4 +1,3 @@
-# configurações do serviço
 spring:
   main:
     allow-circular-references: true
@@ -15,7 +14,7 @@ spring:
     password: ${FLYWAY_PASSWORD:postgres}
     validate-on-migrate: ${FLYWAY_VALIDATE_ON_MIGRATE:true}
     baseline-on-migrate: ${FLYWAY_BASELINE_ON_MIGRATE:true}
-    locations: classpath:/bd/migrations
+    locations: classpath:migrations
   jpa:
     hibernate:
       ddl-auto: update

@@ -52,7 +52,15 @@ public class InstituicaoService implements IService<InstituicaoDTO> {
 
     @Override
     public InstituicaoDTO recuperar(Long id) throws NegocialException {
-        return id == null || id == 0L ? null : mapper.toDto(repository.findById(id).orElseThrow(InstituicaoNaoEncontradaException::new));
+
+        if (id == null || id == 0L) {
+
+            throw new InstituicaoNaoEncontradaException();
+
+        }
+
+        return mapper.toDto(repository.findById(id).orElseThrow(InstituicaoNaoEncontradaException::new));
+
     }
 
     @Override

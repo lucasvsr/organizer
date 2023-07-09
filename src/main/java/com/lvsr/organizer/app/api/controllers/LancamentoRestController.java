@@ -1,14 +1,10 @@
 package com.lvsr.organizer.app.api.controllers;
 
-import com.lvsr.organizer.app.dtos.ContaDTO;
 import com.lvsr.organizer.app.dtos.LancamentoDTO;
 import com.lvsr.organizer.app.exceptions.NegocialException;
 import com.lvsr.organizer.app.interfaces.IController;
-import com.lvsr.organizer.app.mappers.ContaMapper;
 import com.lvsr.organizer.app.mappers.LancamentoMapper;
-import com.lvsr.organizer.app.repositories.ContaRepository;
 import com.lvsr.organizer.app.repositories.LancamentoRepository;
-import com.lvsr.organizer.app.services.ContaService;
 import com.lvsr.organizer.app.services.LancamentoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,9 +32,7 @@ public class LancamentoRestController implements IController<LancamentoDTO> {
     @GetMapping
     public ResponseEntity<List<LancamentoDTO>> todos() {
 
-        List<LancamentoDTO> lista = repository.findAll().stream().map(user -> mapper.toDto(user)).toList();
-
-        return lista.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(lista);
+        return ResponseEntity.ok(repository.findAll().stream().map(entidade -> mapper.toDto(entidade)).toList());
 
     }
 
@@ -52,11 +46,9 @@ public class LancamentoRestController implements IController<LancamentoDTO> {
 
     @Override
     @PostMapping
-    public ResponseEntity<?> salvar(@Valid LancamentoDTO dto) throws NegocialException {
+    public ResponseEntity<?> salvar(LancamentoDTO dto) throws NegocialException {
 
-        HttpStatus status = Objects.nonNull(dto.getId()) ? HttpStatus.OK : HttpStatus.CREATED;
-
-        return ResponseEntity.status(status).body(service.salvar(dto));
+        return ResponseEntity.status(Objects.nonNull(dto.getId()) ? HttpStatus.OK : HttpStatus.CREATED).body(service.salvar(dto));
 
     }
 

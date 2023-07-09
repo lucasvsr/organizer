@@ -8,7 +8,6 @@ import com.lvsr.organizer.app.exceptions.UsuarioNaoEncontradoException;
 import com.lvsr.organizer.app.interfaces.IService;
 import com.lvsr.organizer.app.mappers.UsuarioMapper;
 import com.lvsr.organizer.app.models.Usuario;
-import com.lvsr.organizer.app.repositories.ContaRepository;
 import com.lvsr.organizer.app.repositories.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,9 +29,7 @@ public class UsuarioService implements IService<UsuarioDTO> {
     @Override
     public UsuarioDTO salvar(UsuarioDTO usuarioDTO) throws NegocialException {
 
-        Usuario entidade = mapper.toModel(validar(usuarioDTO));
-
-        return mapper.toDto(repository.save(entidade));
+        return mapper.toDto(repository.save(mapper.toModel(validar(usuarioDTO))));
 
     }
 
@@ -41,49 +38,37 @@ public class UsuarioService implements IService<UsuarioDTO> {
 
         UsuarioDTO dto = recuperar(id);
 
-        if (Objects.nonNull(dto)) {
+        for (ContaDTO conta : dto.getContas()) {
 
-            for (ContaDTO conta : dto.getContas()) {
-
-                contaService.excluir(conta.getId());
-
-            }
-
-            repository.deleteById(dto.getId());
-
-            return dto;
-
-        } else {
-
-            throw new UsuarioNaoEncontradoException();
+            contaService.excluir(conta.getId());
 
         }
+
+        repository.deleteById(dto.getId());
+
+        return dto;
+
 
     }
 
     @Override
     public UsuarioDTO recuperar(Long id) throws NegocialException {
 
-        return id == null || id == 0L ? null : mapper.toDto(repository.findById(id).orElseThrow(UsuarioNaoEncontradoException::new));
+        if (id == null || id == 0L) {
+
+            throw new UsuarioNaoEncontradoException();
+
+        }
+
+        return mapper.toDto(repository.findById(id).orElseThrow(UsuarioNaoEncontradoException::new));
 
     }
 
     @Override
     public UsuarioDTO validar(UsuarioDTO usuarioDTO) throws NegocialException {
 
-        boolean temId = Objects.nonNull(usuarioDTO.getId());
-        Usuario usuario = temId ? repository.findById(usuarioDTO.getId()).orElse(null) : null;
-        Usuario usuarioEmail = StringUtils.hasText(usuarioDTO.getEmail()) ? repository.findByEmail(usuarioDTO.getEmail()).orElse(null) : null;
-
-        if (temId) {
-
-            if (Objects.isNull(usuario)) {
-
-                throw new UsuarioNaoEncontradoException();
-
-            }
-
-        }
+        Usuario usuarioEmail = StringUtils.hasText(usuarioDTO.getEmail()) ?
+                repository.findByEmail(usuarioDTO.getEmail()).orElse(null) : null;
 
         if (Objects.nonNull(usuarioEmail) && !usuarioEmail.getId().equals(usuarioDTO.getId())) {
 

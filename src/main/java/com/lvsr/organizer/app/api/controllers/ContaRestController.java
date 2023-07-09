@@ -32,9 +32,7 @@ public class ContaRestController implements IController<ContaDTO> {
     @GetMapping
     public ResponseEntity<List<ContaDTO>> todos() {
 
-        List<ContaDTO> lista = repository.findAll().stream().map(user -> mapper.toDto(user)).toList();
-
-        return lista.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(lista);
+        return ResponseEntity.ok(repository.findAll().stream().map(entidade -> mapper.toDto(entidade)).toList());
 
     }
 
@@ -48,13 +46,9 @@ public class ContaRestController implements IController<ContaDTO> {
 
     @Override
     @PostMapping
-    public ResponseEntity<?> salvar(@Valid ContaDTO dto) throws NegocialException {
+    public ResponseEntity<?> salvar(ContaDTO dto) throws NegocialException {
 
-        HttpStatus status = Objects.nonNull(dto.getId()) ? HttpStatus.OK : HttpStatus.CREATED;
-
-        return ResponseEntity.status(status).body(service.salvar(dto));
-
-
+        return ResponseEntity.status(Objects.nonNull(dto.getId()) ? HttpStatus.OK : HttpStatus.CREATED).body(service.salvar(dto));
 
     }
 

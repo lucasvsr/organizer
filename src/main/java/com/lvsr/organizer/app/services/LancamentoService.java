@@ -41,65 +41,44 @@ public class LancamentoService implements IService<LancamentoDTO> {
 
         LancamentoDTO dto = recuperar(id);
 
-        if (Objects.nonNull(dto)) {
+        operar(dto.getTipo().equals(TipoLancamentoEnum.ENTRADA) ? TipoLancamentoEnum.SAIDA : TipoLancamentoEnum.ENTRADA,
+                contaService.recuperar(dto.getContaId()),
+                dto.getValor());
 
-            operar(dto.getTipo().equals(TipoLancamentoEnum.ENTRADA) ? TipoLancamentoEnum.SAIDA : TipoLancamentoEnum.ENTRADA,
-                    contaService.recuperar(dto.getContaId()),
-                    dto.getValor());
+        repository.deleteById(dto.getId());
 
-            repository.deleteById(dto.getId());
-
-            return dto;
-
-        } else {
-
-            throw new LancamentoNaoEncontradoException();
-
-        }
+        return dto;
 
     }
 
     @Override
     public LancamentoDTO recuperar(Long id) throws NegocialException {
-        return id == null || id == 0L ? null : mapper.toDto(repository.findById(id).orElseThrow(LancamentoNaoEncontradoException::new));
+        
+        if (id == null || id == 0L) {
+
+            throw new LancamentoNaoEncontradoException();
+
+        }
+
+        return mapper.toDto(repository.findById(id).orElseThrow(LancamentoNaoEncontradoException::new));
+
     }
 
     @Override
     public LancamentoDTO validar(LancamentoDTO lancamentoDTO) throws NegocialException {
 
-        boolean temId = Objects.nonNull(lancamentoDTO.getId());
-        Lancamento entidade = temId ? repository.findById(lancamentoDTO.getId()).orElse(null) : null;
+        Lancamento entidade;
         ContaDTO conta = contaService.recuperar(lancamentoDTO.getContaId());
 
-        if (Objects.isNull(lancamentoDTO.getTipo())) {
+        conta.setDonoId(lancamentoDTO.getContaDono());
 
-            throw new LancamentoNaoTipadoException();
+        contaService.validar(conta);
 
-        }
+        if (Objects.nonNull(lancamentoDTO.getId())) {
 
-        if (Objects.isNull(conta)) {
-
-            throw new ContaInexistenteException();
-
-        }
-
-        if (temId) {
-
-            if (Objects.isNull(entidade)) {
-
-                throw new LancamentoNaoEncontradoException();
-
-            }
+            entidade = mapper.toModel(recuperar(lancamentoDTO.getId()));
 
             operar(entidade.getTipo().equals(TipoLancamentoEnum.ENTRADA) ? TipoLancamentoEnum.SAIDA : TipoLancamentoEnum.ENTRADA, conta, entidade.getValor());
-
-        } else {
-
-            if (Objects.isNull(lancamentoDTO.getDataLancamento())) {
-
-                throw new LancamentoNaoDatadoException();
-
-            }
 
         }
 
@@ -125,7 +104,7 @@ public class LancamentoService implements IService<LancamentoDTO> {
 
     }
 
-    private void operar(TipoLancamentoEnum tipo, ContaDTO conta, Long valor) throws NegocialException {
+    private void operar(TipoLancamentoEnum tipo, ContaDTO conta, Double valor) throws NegocialException {
 
         if (tipo.equals(TipoLancamentoEnum.ENTRADA)) {
 

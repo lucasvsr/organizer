@@ -6,7 +6,6 @@ import com.lvsr.organizer.app.interfaces.IController;
 import com.lvsr.organizer.app.mappers.UsuarioMapper;
 import com.lvsr.organizer.app.repositories.UsuarioRepository;
 import com.lvsr.organizer.app.services.UsuarioService;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,9 +31,7 @@ public class UsuarioRestController implements IController<UsuarioDTO> {
     @GetMapping
     public ResponseEntity<List<UsuarioDTO>> todos() {
 
-        List<UsuarioDTO> lista = repository.findAll().stream().map(user -> mapper.toDto(user)).toList();
-
-        return lista.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(lista);
+        return ResponseEntity.ok(repository.findAll().stream().map(entidade -> mapper.toDto(entidade)).toList());
 
     }
 
@@ -48,11 +45,9 @@ public class UsuarioRestController implements IController<UsuarioDTO> {
 
     @Override
     @PostMapping
-    public ResponseEntity<?> salvar(@Valid UsuarioDTO dto) throws NegocialException {
+    public ResponseEntity<?> salvar(UsuarioDTO dto) throws NegocialException {
 
-        HttpStatus status = Objects.nonNull(dto.getId()) ? HttpStatus.OK : HttpStatus.CREATED;
-
-        return ResponseEntity.status(status).body(service.salvar(dto));
+        return ResponseEntity.status(Objects.nonNull(dto.getId()) ? HttpStatus.OK : HttpStatus.CREATED).body(service.salvar(dto));
 
     }
 

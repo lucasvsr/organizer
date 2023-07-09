@@ -23,7 +23,7 @@ public class Lancamento {
     private String descricao;
 
     @Column(nullable = false)
-    private Long valor;
+    private Double valor;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)

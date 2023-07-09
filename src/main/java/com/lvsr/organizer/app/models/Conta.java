@@ -22,7 +22,7 @@ public class Conta {
     private TipoContaEnum tipo;
 
     @Column(nullable = false)
-    private Long saldo;
+    private Double saldo;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
     private Usuario dono;
