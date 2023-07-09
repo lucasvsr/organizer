@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AnalysisUIOptions">
+    <option name="ANALYZE_INJECTED_CODE" value="false" />
+  </component>
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="ALL" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="bbfcd825-d9f9-4f8c-95f0-aa94717bf3ec" name="Changes" comment="feat: add exceptions handler">
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/app-0.0.1-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/target/app-0.0.1-SNAPSHOT.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/app-0.0.1-SNAPSHOT.jar.original" beforeDir="false" afterPath="$PROJECT_DIR$/target/app-0.0.1-SNAPSHOT.jar.original" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lvsr/organizer/app/controllers/ContaRestController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lvsr/organizer/app/controllers/InstituicaoRestController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lvsr/organizer/app/controllers/LancamentoRestController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lvsr/organizer/app/controllers/UsuarioRestController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lvsr/organizer/app/dtos/ContaDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/lvsr/organizer/app/dtos/ContaDTO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lvsr/organizer/app/dtos/InstituicaoDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/lvsr/organizer/app/dtos/InstituicaoDTO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lvsr/organizer/app/dtos/LancamentoDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/lvsr/organizer/app/dtos/LancamentoDTO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lvsr/organizer/app/dtos/UsuarioDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/lvsr/organizer/app/dtos/UsuarioDTO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lvsr/organizer/app/exceptions/InstituicaoInexistenteException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lvsr/organizer/app/interfaces/IController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/lvsr/organizer/app/interfaces/IController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lvsr/organizer/app/services/InstituicaoService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/lvsr/organizer/app/services/InstituicaoService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lvsr/organizer/app/services/LancamentoService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/lvsr/organizer/app/services/LancamentoService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/annotations/com/lvsr/organizer/app/mappers/ContaMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/annotations/com/lvsr/organizer/app/mappers/ContaMapperImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/annotations/com/lvsr/organizer/app/mappers/InstituicaoMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/annotations/com/lvsr/organizer/app/mappers/InstituicaoMapperImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/annotations/com/lvsr/organizer/app/mappers/LancamentoMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/annotations/com/lvsr/organizer/app/mappers/LancamentoMapperImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/annotations/com/lvsr/organizer/app/mappers/UsuarioMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/annotations/com/lvsr/organizer/app/mappers/UsuarioMapperImpl.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CompilerWorkspaceConfiguration">
+    <option name="MAKE_PROJECT_ON_SAVE" value="true" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Enum" />
+        <option value="Interface" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="useMavenConfig" value="true" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="MavenRunner">
+    <option name="skipTests" value="true" />
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
+  <component name="ProjectId" id="2S10JErYbEruljOlc8Cvj3TL10K" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Downloaded.Files.Path.Enabled&quot;: &quot;false&quot;,
+    &quot;Repository.Attach.Annotations&quot;: &quot;false&quot;,
+    &quot;Repository.Attach.JavaDocs&quot;: &quot;false&quot;,
+    &quot;Repository.Attach.Sources&quot;: &quot;false&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/var/home/lucasribeiro/Projetos/Pessoal/organizer&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;SDKs&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.20284995&quot;,
+    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
+    &quot;settings.build.tools.auto.reload&quot;: &quot;ALL&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;advanced.settings&quot;
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="com.lvsr.organizer.app.exceptions" />
+      <recent name="com.lvsr.organizer.app.mappers" />
+      <recent name="com.lvsr.organizer.app.dtos" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/main/resources" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.lvsr.organizer.app.controllers" />
+      <recent name="com.lvsr.organizer.app.repositories" />
+      <recent name="com.lvsr.organizer.app.mappers" />
+    </key>
+  </component>
+  <component name="RunAnythingCache">
+    <option name="myCommands">
+      <command value="mvn clean" />
+      <command value="mvn clean install -U" />
+    </option>
+  </component>
+  <component name="RunManager">
+    <configuration name="OrganizerApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.lvsr.organizer.app.OrganizerApplication" />
+      <module name="app" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.lvsr.organizer.app.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.OrganizerApplication" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="bbfcd825-d9f9-4f8c-95f0-aa94717bf3ec" name="Changes" comment="" />
+      <created>1688298706398</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1688298706398</updated>
+    </task>
+    <task id="LOCAL-00001" summary="feat: add exceptions handler">
+      <option name="closed" value="true" />
+      <created>1688902537967</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1688902537968</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
+    <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="feat: add exceptions handler" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: add exceptions handler" />
+  </component>
+</project>
