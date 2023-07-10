@@ -12,6 +12,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -109,4 +110,13 @@ public class ContaService implements IService<ContaDTO> {
 
     }
 
+    public void excluirContasInstituicao(Long instituicaoId) throws NegocialException {
+
+        for (Conta conta: repository.findByInstituicaoId(instituicaoId)) {
+
+            excluir(conta.getId());
+
+        }
+
+    }
 }

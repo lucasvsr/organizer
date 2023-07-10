@@ -6,7 +6,6 @@ import com.lvsr.organizer.app.interfaces.IController;
 import com.lvsr.organizer.app.mappers.InstituicaoMapper;
 import com.lvsr.organizer.app.repositories.InstituicaoRepository;
 import com.lvsr.organizer.app.services.InstituicaoService;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

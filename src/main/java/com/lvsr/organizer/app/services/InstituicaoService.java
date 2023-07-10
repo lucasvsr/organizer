@@ -6,12 +6,9 @@ import com.lvsr.organizer.app.exceptions.InstituicaoNaoEncontradaException;
 import com.lvsr.organizer.app.exceptions.NegocialException;
 import com.lvsr.organizer.app.interfaces.IService;
 import com.lvsr.organizer.app.mappers.InstituicaoMapper;
-import com.lvsr.organizer.app.models.Instituicao;
 import com.lvsr.organizer.app.repositories.InstituicaoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 public class InstituicaoService implements IService<InstituicaoDTO> {
@@ -22,31 +19,27 @@ public class InstituicaoService implements IService<InstituicaoDTO> {
     @Autowired
     private InstituicaoMapper mapper;
 
+    @Autowired
+    private ContaService contaService;
+
     @Override
     public InstituicaoDTO salvar(InstituicaoDTO instituicaoDTO) throws NegocialException {
 
-        Instituicao entidade = mapper.toModel(validar(instituicaoDTO));
-
-        return mapper.toDto(repository.save(entidade));
+        return mapper.toDto(repository.save(mapper.toModel(validar(instituicaoDTO))));
 
     }
 
     @Override
     public InstituicaoDTO excluir(Long id) throws NegocialException {
 
-        Optional<Instituicao> query = repository.findById(id);
+        InstituicaoDTO instituicao = recuperar(id);
 
-        if(query.isPresent()) {
+        contaService.excluirContasInstituicao(instituicao.getId());
 
-            repository.delete(query.get());
+        repository.deleteById(instituicao.getId());
 
-            return mapper.toDto(query.get());
+        return instituicao;
 
-        } else {
-
-            throw new InstituicaoNaoEncontradaException();
-
-        }
 
     }
 
@@ -66,7 +59,7 @@ public class InstituicaoService implements IService<InstituicaoDTO> {
     @Override
     public InstituicaoDTO validar(InstituicaoDTO instituicaoDTO) throws NegocialException {
 
-        if(repository.findAll().stream().anyMatch(instituicao -> instituicao.getNome().equals(instituicaoDTO.getNome()))) {
+        if (repository.findAll().stream().anyMatch(instituicao -> instituicao.getNome().equals(instituicaoDTO.getNome()))) {
 
             throw new InstituicaoJaCadastradaException();
 
