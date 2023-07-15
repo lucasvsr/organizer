@@ -13,14 +13,17 @@ import org.springframework.stereotype.Service;
 @Service
 public class InstituicaoService implements IService<InstituicaoDTO> {
 
-    @Autowired
-    private InstituicaoRepository repository;
+    private final InstituicaoRepository repository;
 
-    @Autowired
-    private InstituicaoMapper mapper;
+    private final InstituicaoMapper mapper;
 
-    @Autowired
-    private ContaService contaService;
+    private final ContaService contaService;
+
+    public InstituicaoService(InstituicaoRepository repository, InstituicaoMapper mapper, ContaService contaService) {
+        this.repository = repository;
+        this.mapper = mapper;
+        this.contaService = contaService;
+    }
 
     @Override
     public InstituicaoDTO salvar(InstituicaoDTO instituicaoDTO) throws NegocialException {

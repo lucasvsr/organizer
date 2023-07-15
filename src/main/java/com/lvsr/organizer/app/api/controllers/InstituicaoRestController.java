@@ -6,7 +6,10 @@ import com.lvsr.organizer.app.interfaces.IController;
 import com.lvsr.organizer.app.mappers.InstituicaoMapper;
 import com.lvsr.organizer.app.repositories.InstituicaoRepository;
 import com.lvsr.organizer.app.services.InstituicaoService;
-import org.springframework.beans.factory.annotation.Autowired;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,26 +19,39 @@ import java.util.Objects;
 
 @RestController
 @RequestMapping("instituicoes")
+@Tag(name = "instituicoes")
 public class InstituicaoRestController implements IController<InstituicaoDTO> {
 
-    @Autowired
-    InstituicaoRepository repository;
+    private final InstituicaoRepository repository;
 
-    @Autowired
-    InstituicaoService service;
+    private final InstituicaoService service;
 
-    @Autowired
-    InstituicaoMapper mapper;
+    private final InstituicaoMapper mapper;
+
+    public InstituicaoRestController(InstituicaoRepository repository, InstituicaoService service, InstituicaoMapper mapper) {
+        this.repository = repository;
+        this.service = service;
+        this.mapper = mapper;
+    }
 
     @Override
+    @Operation(summary = "Retorna todas as instituições cadastradas na base", method = "GET")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Requisição realizada com sucesso")
+    })
     @GetMapping
     public ResponseEntity<List<InstituicaoDTO>> todos() {
 
-        return ResponseEntity.ok(repository.findAll().stream().map(entidade -> mapper.toDto(entidade)).toList());
+        return ResponseEntity.ok(repository.findAll().stream().map(mapper::toDto).toList());
 
     }
 
     @Override
+    @Operation(summary = "Retorna a instituição informada", method = "GET")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Requisição realizada com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Requisição não encontrada")
+    })
     @GetMapping("/{id}")
     public ResponseEntity<?> recupera(Long id) throws NegocialException {
 
@@ -44,6 +60,11 @@ public class InstituicaoRestController implements IController<InstituicaoDTO> {
     }
 
     @Override
+    @Operation(summary = "Salva a instituição informada", method = "POST")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Requisição realizada com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Requisição mal formada")
+    })
     @PostMapping
     public ResponseEntity<?> salvar(InstituicaoDTO dto) throws NegocialException {
 
@@ -52,6 +73,11 @@ public class InstituicaoRestController implements IController<InstituicaoDTO> {
     }
 
     @Override
+    @Operation(summary = "Exclui a instituição informada", method = "DELETE")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Requisição realizada com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Requisição mal formada")
+    })
     @DeleteMapping("/{id}")
     public ResponseEntity<?> excluir(Long id) throws NegocialException {
 

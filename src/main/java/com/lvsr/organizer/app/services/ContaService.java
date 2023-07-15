@@ -10,6 +10,7 @@ import com.lvsr.organizer.app.models.Conta;
 import com.lvsr.organizer.app.repositories.ContaRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,19 +19,25 @@ import java.util.Objects;
 @Service
 public class ContaService implements IService<ContaDTO> {
 
-    @Autowired
-    private ContaRepository repository;
-    @Autowired
-    private UsuarioService usuarioService;
+    private final ContaRepository repository;
+    private final UsuarioService usuarioService;
 
-    @Autowired
-    private InstituicaoService instituicaoService;
+    private final InstituicaoService instituicaoService;
 
-    @Autowired
-    private LancamentoService lancamentoService;
+    private final LancamentoService lancamentoService;
 
-    @Autowired
-    private ContaMapper mapper;
+    private final ContaMapper mapper;
+
+    public ContaService(ContaRepository repository,
+                        UsuarioService usuarioService,
+                        @Lazy InstituicaoService instituicaoService,
+                        @Lazy LancamentoService lancamentoService, ContaMapper mapper) {
+        this.repository = repository;
+        this.usuarioService = usuarioService;
+        this.instituicaoService = instituicaoService;
+        this.lancamentoService = lancamentoService;
+        this.mapper = mapper;
+    }
 
     @Override
     public ContaDTO salvar(ContaDTO contaDTO) throws NegocialException {
@@ -112,7 +119,7 @@ public class ContaService implements IService<ContaDTO> {
 
     public void excluirContasInstituicao(Long instituicaoId) throws NegocialException {
 
-        for (Conta conta: repository.findByInstituicaoId(instituicaoId)) {
+        for (Conta conta : repository.findByInstituicaoId(instituicaoId)) {
 
             excluir(conta.getId());
 

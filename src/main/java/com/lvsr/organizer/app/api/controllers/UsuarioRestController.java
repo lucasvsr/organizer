@@ -6,7 +6,10 @@ import com.lvsr.organizer.app.interfaces.IController;
 import com.lvsr.organizer.app.mappers.UsuarioMapper;
 import com.lvsr.organizer.app.repositories.UsuarioRepository;
 import com.lvsr.organizer.app.services.UsuarioService;
-import org.springframework.beans.factory.annotation.Autowired;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,18 +19,26 @@ import java.util.Objects;
 
 @RestController
 @RequestMapping("usuarios")
+@Tag(name = "usuarios")
 public class UsuarioRestController implements IController<UsuarioDTO> {
 
-    @Autowired
-    UsuarioRepository repository;
+    private final UsuarioRepository repository;
 
-    @Autowired
-    UsuarioService service;
+    private final UsuarioService service;
 
-    @Autowired
-    UsuarioMapper mapper;
+    private final UsuarioMapper mapper;
+
+    public UsuarioRestController(UsuarioRepository repository, UsuarioService service, UsuarioMapper mapper) {
+        this.repository = repository;
+        this.service = service;
+        this.mapper = mapper;
+    }
 
     @Override
+    @Operation(summary = "Retorna todos os usuários cadastrados na base", method = "GET")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Requisição realizada com sucesso")
+    })
     @GetMapping
     public ResponseEntity<List<UsuarioDTO>> todos() {
 
@@ -36,6 +47,11 @@ public class UsuarioRestController implements IController<UsuarioDTO> {
     }
 
     @Override
+    @Operation(summary = "Retorna o usuário informado", method = "GET")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Requisição realizada com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Requisição não encontrada")
+    })
     @GetMapping("/{id}")
     public ResponseEntity<?> recupera(Long id) throws NegocialException {
 
@@ -44,6 +60,11 @@ public class UsuarioRestController implements IController<UsuarioDTO> {
     }
 
     @Override
+    @Operation(summary = "Salva o usuário informado", method = "POST")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Requisição realizada com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Requisição mal formada")
+    })
     @PostMapping
     public ResponseEntity<?> salvar(UsuarioDTO dto) throws NegocialException {
 
@@ -52,6 +73,11 @@ public class UsuarioRestController implements IController<UsuarioDTO> {
     }
 
     @Override
+    @Operation(summary = "Exclui o lançamento informado", method = "DELETE")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Requisição realizada com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Requisição mal formada")
+    })
     @DeleteMapping("/{id}")
     public ResponseEntity<?> excluir(Long id) throws NegocialException {
 

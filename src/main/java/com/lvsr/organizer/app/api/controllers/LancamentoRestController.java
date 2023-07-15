@@ -6,9 +6,15 @@ import com.lvsr.organizer.app.interfaces.IController;
 import com.lvsr.organizer.app.mappers.LancamentoMapper;
 import com.lvsr.organizer.app.repositories.LancamentoRepository;
 import com.lvsr.organizer.app.services.LancamentoService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,18 +23,26 @@ import java.util.Objects;
 
 @RestController
 @RequestMapping("lancamentos")
+@Tag(name = "lancamentos")
 public class LancamentoRestController implements IController<LancamentoDTO> {
 
-    @Autowired
-    LancamentoRepository repository;
+    private final LancamentoRepository repository;
 
-    @Autowired
-    LancamentoService service;
+    private final LancamentoService service;
 
-    @Autowired
-    LancamentoMapper mapper;
+    private final LancamentoMapper mapper;
+
+    public LancamentoRestController(LancamentoRepository repository, LancamentoService service, LancamentoMapper mapper) {
+        this.repository = repository;
+        this.service = service;
+        this.mapper = mapper;
+    }
 
     @Override
+    @Operation(summary = "Retorna todas os lançamentos cadastradas na base", method = "GET")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Requisição realizada com sucesso")
+    })
     @GetMapping
     public ResponseEntity<List<LancamentoDTO>> todos() {
 
@@ -37,6 +51,11 @@ public class LancamentoRestController implements IController<LancamentoDTO> {
     }
 
     @Override
+    @Operation(summary = "Retorna o lançamento informado", method = "GET")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Requisição realizada com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Requisição não encontrada")
+    })
     @GetMapping("/{id}")
     public ResponseEntity<?> recupera(Long id) throws NegocialException {
 
@@ -45,6 +64,11 @@ public class LancamentoRestController implements IController<LancamentoDTO> {
     }
 
     @Override
+    @Operation(summary = "Salva o lançamento informado", method = "POST")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Requisição realizada com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Requisição mal formada")
+    })
     @PostMapping
     public ResponseEntity<?> salvar(LancamentoDTO dto) throws NegocialException {
 
@@ -53,6 +77,11 @@ public class LancamentoRestController implements IController<LancamentoDTO> {
     }
 
     @Override
+    @Operation(summary = "Salva o lançamento informado", method = "DELETE")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Requisição realizada com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Requisição mal formada")
+    })
     @DeleteMapping("/{id}")
     public ResponseEntity<?> excluir(Long id) throws NegocialException {
 
@@ -60,6 +89,11 @@ public class LancamentoRestController implements IController<LancamentoDTO> {
 
     }
 
+    @Operation(summary = "Retorna os lançamentos do usuário informado", method = "GET")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Requisição realizada com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Requisição não encontrada")
+    })
     @GetMapping("/user/{userId}")
     public ResponseEntity<?> recuperar(@PathVariable("userId") Long userId) throws NegocialException {
 

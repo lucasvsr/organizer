@@ -9,7 +9,7 @@ import com.lvsr.organizer.app.interfaces.IService;
 import com.lvsr.organizer.app.mappers.UsuarioMapper;
 import com.lvsr.organizer.app.models.Usuario;
 import com.lvsr.organizer.app.repositories.UsuarioRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -18,13 +18,16 @@ import java.util.Objects;
 @Service
 public class UsuarioService implements IService<UsuarioDTO> {
 
-    @Autowired
-    private UsuarioRepository repository;
-    @Autowired
-    private ContaService contaService;
+    private final UsuarioRepository repository;
+    private final ContaService contaService;
 
-    @Autowired
-    private UsuarioMapper mapper;
+    private final UsuarioMapper mapper;
+
+    public UsuarioService(UsuarioRepository repository, @Lazy ContaService contaService, UsuarioMapper mapper) {
+        this.repository = repository;
+        this.contaService = contaService;
+        this.mapper = mapper;
+    }
 
     @Override
     public UsuarioDTO salvar(UsuarioDTO usuarioDTO) throws NegocialException {
