@@ -15,8 +15,7 @@ import java.time.LocalDate;
 public class LancamentoDTO {
 
     private Long id;
-    @NotNull(message = "É necessário informar a data do lançamento")
-    private LocalDate dataLancamento;
+    private LocalDate dataLancamento = LocalDate.now();
     @NotNull(message = "É necessário informar a descrição do lançamento")
     private String descricao;
     @Min(value = 1, message = "O valor da transação deve ser de no minímo 1 real.")
@@ -27,5 +26,6 @@ public class LancamentoDTO {
     private Long contaId;
     @NotNull(message = "É necessário informar o dono da conta do lançamento")
     private Long contaDono;
+    private Boolean efetivado = false;
 
 }

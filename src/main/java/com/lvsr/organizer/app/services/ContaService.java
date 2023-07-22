@@ -109,7 +109,9 @@ public class ContaService implements IService<ContaDTO> {
 
     }
 
-    public void atualizarSaldo(Double valor, ContaDTO conta) throws NegocialException {
+    public void atualizarSaldo(Double valor, Long id) throws NegocialException {
+
+        ContaDTO conta = recuperar(id);
 
         conta.setSaldo(conta.getSaldo() + valor);
 

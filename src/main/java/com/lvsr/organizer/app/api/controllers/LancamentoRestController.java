@@ -1,5 +1,6 @@
 package com.lvsr.organizer.app.api.controllers;
 
+import com.lvsr.organizer.app.dtos.EfetivaLancamentoDTO;
 import com.lvsr.organizer.app.dtos.LancamentoDTO;
 import com.lvsr.organizer.app.exceptions.NegocialException;
 import com.lvsr.organizer.app.interfaces.IController;
@@ -98,6 +99,19 @@ public class LancamentoRestController implements IController<LancamentoDTO> {
     public ResponseEntity<?> recuperar(@PathVariable("userId") Long userId) throws NegocialException {
 
         return ResponseEntity.ok(service.recuperarLancamentosUsuario(userId));
+
+    }
+
+    @Operation(summary = "Efetiva o lançamento informado", method = "GET")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Requisição realizada com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Requisição não encontrada"),
+            @ApiResponse(responseCode = "400", description = "Requisição mal formada")
+    })
+    @PutMapping("/efetivar")
+    public ResponseEntity<?> efetivar(@RequestBody EfetivaLancamentoDTO dto) throws NegocialException {
+
+        return ResponseEntity.ok(service.efetivar(dto));
 
     }
 

@@ -42,7 +42,7 @@ public class UsuarioRestController implements IController<UsuarioDTO> {
     @GetMapping
     public ResponseEntity<List<UsuarioDTO>> todos() {
 
-        return ResponseEntity.ok(repository.findAll().stream().map(entidade -> mapper.toDto(entidade)).toList());
+        return ResponseEntity.ok(repository.findAll().stream().map(mapper::toDto).toList());
 
     }
 

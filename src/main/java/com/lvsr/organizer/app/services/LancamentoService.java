@@ -1,16 +1,17 @@
 package com.lvsr.organizer.app.services;
 
 import com.lvsr.organizer.app.dtos.ContaDTO;
+import com.lvsr.organizer.app.dtos.EfetivaLancamentoDTO;
 import com.lvsr.organizer.app.dtos.LancamentoDTO;
 import com.lvsr.organizer.app.enums.TipoLancamentoEnum;
-import com.lvsr.organizer.app.exceptions.LancamentoNaoEncontradoException;
-import com.lvsr.organizer.app.exceptions.NegocialException;
+import com.lvsr.organizer.app.exceptions.*;
 import com.lvsr.organizer.app.interfaces.IService;
 import com.lvsr.organizer.app.mappers.LancamentoMapper;
 import com.lvsr.organizer.app.models.Lancamento;
 import com.lvsr.organizer.app.repositories.LancamentoRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
@@ -35,18 +36,29 @@ public class LancamentoService implements IService<LancamentoDTO> {
     @Override
     public LancamentoDTO salvar(LancamentoDTO lancamentoDTO) throws NegocialException {
 
-        Lancamento lancamento = mapper.toModel(validar(lancamentoDTO));
-        ContaDTO conta = contaService.recuperar(lancamento.getConta().getId());
+        Lancamento lancamento;
+        lancamentoDTO = validar(lancamentoDTO);
 
-        if (Objects.nonNull(lancamento.getId())) {
+        if (lancamentoDTO.getEfetivado()) {
 
-            operar(lancamento.getTipo().equals(TipoLancamentoEnum.ENTRADA) ? TipoLancamentoEnum.SAIDA : TipoLancamentoEnum.ENTRADA, conta, lancamento.getValor());
+            if (Objects.nonNull(lancamentoDTO.getId())) {
+
+                lancamento = mapper.toModel(recuperar(lancamentoDTO.getId()));
+
+                if(!lancamentoDTO.getValor().equals(lancamento.getValor())) {
+
+                    operar(lancamento.getTipo().equals(TipoLancamentoEnum.ENTRADA) ? TipoLancamentoEnum.SAIDA : TipoLancamentoEnum.ENTRADA,
+                            lancamentoDTO.getContaId(), lancamento.getValor());
+
+                }
+
+            }
+
+            operar(lancamentoDTO.getTipo(), lancamentoDTO.getContaId(), lancamentoDTO.getValor());
 
         }
 
-        lancamentoDTO = mapper.toDto(repository.save(lancamento));
-
-        operar(lancamentoDTO.getTipo(), conta, lancamentoDTO.getValor());
+        lancamentoDTO = mapper.toDto(repository.save(mapper.toModel(lancamentoDTO)));
 
         return lancamentoDTO;
 
@@ -58,7 +70,7 @@ public class LancamentoService implements IService<LancamentoDTO> {
         LancamentoDTO dto = recuperar(id);
 
         operar(dto.getTipo().equals(TipoLancamentoEnum.ENTRADA) ? TipoLancamentoEnum.SAIDA : TipoLancamentoEnum.ENTRADA,
-                contaService.recuperar(dto.getContaId()),
+                dto.getContaId(),
                 dto.getValor());
 
         repository.deleteById(dto.getId());
@@ -69,7 +81,7 @@ public class LancamentoService implements IService<LancamentoDTO> {
 
     @Override
     public LancamentoDTO recuperar(Long id) throws NegocialException {
-        
+
         if (id == null || id == 0L) {
 
             throw new LancamentoNaoEncontradoException();
@@ -88,6 +100,8 @@ public class LancamentoService implements IService<LancamentoDTO> {
         conta.setDonoId(lancamentoDTO.getContaDono());
 
         contaService.validar(conta);
+
+        lancamentoDTO.setEfetivado((lancamentoDTO.getDataLancamento().isBefore(LocalDate.now()) || lancamentoDTO.getDataLancamento().isEqual(LocalDate.now())) && lancamentoDTO.getEfetivado().equals(false) || lancamentoDTO.getEfetivado());
 
         return lancamentoDTO;
 
@@ -109,15 +123,42 @@ public class LancamentoService implements IService<LancamentoDTO> {
 
     }
 
-    private void operar(TipoLancamentoEnum tipo, ContaDTO conta, Double valor) throws NegocialException {
+    public LancamentoDTO efetivar(EfetivaLancamentoDTO dto) throws NegocialException {
+
+        LancamentoDTO lancamento = recuperar(dto.getLancamentoId());
+
+        if (lancamento.getEfetivado()) {
+
+            throw new LancamentoJaEfetivadoException();
+
+        }
+
+        try {
+
+            lancamento.setContaDono(dto.getDonoId());
+            lancamento.setEfetivado(true);
+
+            lancamento = salvar(lancamento);
+
+        } catch (ContaComDonoErradoException e) {
+
+            throw new LancamentoNaoPertenceAoUsuarioException();
+
+        }
+
+        return lancamento;
+
+    }
+
+    private void operar(TipoLancamentoEnum tipo, Long contaId, Double valor) throws NegocialException {
 
         if (tipo.equals(TipoLancamentoEnum.ENTRADA)) {
 
-            contaService.atualizarSaldo(valor, conta);
+            contaService.atualizarSaldo(valor, contaId);
 
         } else {
 
-            contaService.atualizarSaldo(-valor, conta);
+            contaService.atualizarSaldo(-valor, contaId);
 
         }
 

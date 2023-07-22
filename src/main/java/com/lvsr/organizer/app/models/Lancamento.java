@@ -16,7 +16,6 @@ public class Lancamento {
     private Long id;
 
     @Temporal(TemporalType.DATE)
-    @UpdateTimestamp
     private LocalDate dataLancamento;
 
     @Column(nullable = false, length = 120)
@@ -31,5 +30,7 @@ public class Lancamento {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Conta conta;
+
+    private Boolean efetivado;
 
 }
