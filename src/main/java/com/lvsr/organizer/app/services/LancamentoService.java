@@ -36,31 +36,24 @@ public class LancamentoService implements IService<LancamentoDTO> {
     @Override
     public LancamentoDTO salvar(LancamentoDTO lancamentoDTO) throws NegocialException {
 
-        Lancamento lancamento;
+        Lancamento lancamento = Objects.nonNull(lancamentoDTO.getId()) ? mapper.toModel(recuperar(lancamentoDTO.getId())) : null;
         lancamentoDTO = validar(lancamentoDTO);
 
-        if (lancamentoDTO.getEfetivado()) {
+        if (Objects.nonNull(lancamento) && lancamento.getEfetivado()) {
 
-            if (Objects.nonNull(lancamentoDTO.getId())) {
+            compararOperar(lancamentoDTO, lancamento);
+            lancamentoDTO.setEfetivado(lancamento.getEfetivado());
 
-                lancamento = mapper.toModel(recuperar(lancamentoDTO.getId()));
+        }
 
-                if(!lancamentoDTO.getValor().equals(lancamento.getValor())) {
+        if (lancamentoDTO.getEfetivado() && (Objects.isNull(lancamento) || !lancamento.getEfetivado())) {
 
-                    operar(lancamento.getTipo().equals(TipoLancamentoEnum.ENTRADA) ? TipoLancamentoEnum.SAIDA : TipoLancamentoEnum.ENTRADA,
-                            lancamentoDTO.getContaId(), lancamento.getValor());
-
-                }
-
-            }
-
+            compararOperar(lancamentoDTO, lancamento);
             operar(lancamentoDTO.getTipo(), lancamentoDTO.getContaId(), lancamentoDTO.getValor());
 
         }
 
-        lancamentoDTO = mapper.toDto(repository.save(mapper.toModel(lancamentoDTO)));
-
-        return lancamentoDTO;
+        return mapper.toDto(repository.save(mapper.toModel(lancamentoDTO)));
 
     }
 
@@ -138,7 +131,7 @@ public class LancamentoService implements IService<LancamentoDTO> {
             lancamento.setContaDono(dto.getDonoId());
             lancamento.setEfetivado(true);
 
-            lancamento = salvar(lancamento);
+            return salvar(lancamento);
 
         } catch (ContaComDonoErradoException e) {
 
@@ -146,7 +139,18 @@ public class LancamentoService implements IService<LancamentoDTO> {
 
         }
 
-        return lancamento;
+    }
+
+    private void compararOperar(LancamentoDTO dto, Lancamento entidade) throws NegocialException {
+
+        if (Objects.nonNull(entidade) && !dto.getValor().equals(entidade.getValor())) {
+
+            operar(entidade.getTipo().equals(TipoLancamentoEnum.ENTRADA) ? TipoLancamentoEnum.SAIDA : TipoLancamentoEnum.ENTRADA,
+                    dto.getContaId(), entidade.getValor());
+
+            operar(dto.getTipo(), dto.getContaId(), dto.getValor());
+
+        }
 
     }
 

@@ -8,12 +8,9 @@ import com.lvsr.organizer.app.interfaces.IService;
 import com.lvsr.organizer.app.mappers.ContaMapper;
 import com.lvsr.organizer.app.models.Conta;
 import com.lvsr.organizer.app.repositories.ContaRepository;
-import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Objects;
 
 @Service

@@ -12,10 +12,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -47,7 +44,7 @@ public class LancamentoRestController implements IController<LancamentoDTO> {
     @GetMapping
     public ResponseEntity<List<LancamentoDTO>> todos() {
 
-        return ResponseEntity.ok(repository.findAll().stream().map(entidade -> mapper.toDto(entidade)).toList());
+        return ResponseEntity.ok(repository.findAll().stream().map(mapper::toDto).toList());
 
     }
 
@@ -109,7 +106,7 @@ public class LancamentoRestController implements IController<LancamentoDTO> {
             @ApiResponse(responseCode = "400", description = "Requisição mal formada")
     })
     @PutMapping("/efetivar")
-    public ResponseEntity<?> efetivar(@RequestBody EfetivaLancamentoDTO dto) throws NegocialException {
+    public ResponseEntity<?> efetivar(@Valid @RequestBody EfetivaLancamentoDTO dto) throws NegocialException {
 
         return ResponseEntity.ok(service.efetivar(dto));
 
