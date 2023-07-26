@@ -39,6 +39,7 @@ public class LancamentoService implements IService<LancamentoDTO> {
         Lancamento lancamento = Objects.nonNull(lancamentoDTO.getId()) ? mapper.toModel(recuperar(lancamentoDTO.getId())) : null;
         lancamentoDTO = validar(lancamentoDTO);
 
+        // Se o lançamento já estiver efetivado na base
         if (Objects.nonNull(lancamento) && lancamento.getEfetivado()) {
 
             compararOperar(lancamentoDTO, lancamento);
@@ -46,9 +47,18 @@ public class LancamentoService implements IService<LancamentoDTO> {
 
         }
 
-        if (lancamentoDTO.getEfetivado() && (Objects.isNull(lancamento) || !lancamento.getEfetivado())) {
+        // Se o lançamento não estiver efetivado na base
+        if (lancamentoDTO.getEfetivado() &&
+                Objects.nonNull(lancamento) && !lancamento.getEfetivado() &&
+                !compararOperar(lancamentoDTO, lancamento)) {
 
-            compararOperar(lancamentoDTO, lancamento);
+            operar(lancamentoDTO.getTipo(), lancamentoDTO.getContaId(), lancamentoDTO.getValor());
+
+        }
+
+        // Se o lançamento não existir na base
+        if (lancamentoDTO.getEfetivado() && Objects.isNull(lancamento)) {
+
             operar(lancamentoDTO.getTipo(), lancamentoDTO.getContaId(), lancamentoDTO.getValor());
 
         }
@@ -94,7 +104,10 @@ public class LancamentoService implements IService<LancamentoDTO> {
 
         contaService.validar(conta);
 
-        lancamentoDTO.setEfetivado((lancamentoDTO.getDataLancamento().isBefore(LocalDate.now()) || lancamentoDTO.getDataLancamento().isEqual(LocalDate.now())) && lancamentoDTO.getEfetivado().equals(false) || lancamentoDTO.getEfetivado());
+        lancamentoDTO.setEfetivado((lancamentoDTO.getDataLancamento().isBefore(LocalDate.now()) ||
+                lancamentoDTO.getDataLancamento().isEqual(LocalDate.now())) &&
+                lancamentoDTO.getEfetivado().equals(false) ||
+                lancamentoDTO.getEfetivado());
 
         return lancamentoDTO;
 
@@ -141,7 +154,7 @@ public class LancamentoService implements IService<LancamentoDTO> {
 
     }
 
-    private void compararOperar(LancamentoDTO dto, Lancamento entidade) throws NegocialException {
+    private boolean compararOperar(LancamentoDTO dto, Lancamento entidade) throws NegocialException {
 
         if (Objects.nonNull(entidade) && !dto.getValor().equals(entidade.getValor())) {
 
@@ -150,8 +163,11 @@ public class LancamentoService implements IService<LancamentoDTO> {
 
             operar(dto.getTipo(), dto.getContaId(), dto.getValor());
 
+            return true;
+
         }
 
+        return false;
     }
 
     private void operar(TipoLancamentoEnum tipo, Long contaId, Double valor) throws NegocialException {

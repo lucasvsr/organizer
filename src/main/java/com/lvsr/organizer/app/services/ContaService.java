@@ -77,10 +77,6 @@ public class ContaService implements IService<ContaDTO> {
         UsuarioDTO dono;
         InstituicaoDTO instituicao = instituicaoService.recuperar(contaDTO.getInstituicaoId());
 
-        if (contaDTO.getSaldo() < 0) {
-            throw new ContaAbaixoDeZeroException();
-        }
-
         try {
 
             dono = usuarioService.recuperar(contaDTO.getDonoId());
