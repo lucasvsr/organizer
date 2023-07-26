@@ -39,7 +39,6 @@ public class LancamentoService implements IService<LancamentoDTO> {
         Lancamento lancamento = Objects.nonNull(lancamentoDTO.getId()) ? mapper.toModel(recuperar(lancamentoDTO.getId())) : null;
         lancamentoDTO = validar(lancamentoDTO);
 
-        // Se o lançamento já estiver efetivado na base
         if (Objects.nonNull(lancamento) && lancamento.getEfetivado()) {
 
             compararOperar(lancamentoDTO, lancamento);
@@ -47,17 +46,7 @@ public class LancamentoService implements IService<LancamentoDTO> {
 
         }
 
-        // Se o lançamento não estiver efetivado na base
-        if (lancamentoDTO.getEfetivado() &&
-                Objects.nonNull(lancamento) && !lancamento.getEfetivado() &&
-                !compararOperar(lancamentoDTO, lancamento)) {
-
-            operar(lancamentoDTO.getTipo(), lancamentoDTO.getContaId(), lancamentoDTO.getValor());
-
-        }
-
-        // Se o lançamento não existir na base
-        if (lancamentoDTO.getEfetivado() && Objects.isNull(lancamento)) {
+        if(lancamentoDTO.getEfetivado() && (Objects.nonNull(lancamento) && !lancamento.getEfetivado() || Objects.isNull(lancamento))) {
 
             operar(lancamentoDTO.getTipo(), lancamentoDTO.getContaId(), lancamentoDTO.getValor());
 
