@@ -7,11 +7,10 @@ import com.lvsr.organizer.app.exceptions.NegocialException;
 import com.lvsr.organizer.app.interfaces.IService;
 import com.lvsr.organizer.app.mappers.InstituicaoMapper;
 import com.lvsr.organizer.app.repositories.InstituicaoRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class InstituicaoService implements IService<InstituicaoDTO> {
+public class InstituicaoService implements IService<InstituicaoDTO, InstituicaoRepository, InstituicaoMapper> {
 
     private final InstituicaoRepository repository;
 
@@ -71,4 +70,15 @@ public class InstituicaoService implements IService<InstituicaoDTO> {
         return instituicaoDTO;
 
     }
+
+    @Override
+    public InstituicaoRepository getRepository() {
+        return repository;
+    }
+
+    @Override
+    public InstituicaoMapper getMapper() {
+        return mapper;
+    }
+
 }

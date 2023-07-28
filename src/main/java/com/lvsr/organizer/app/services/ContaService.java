@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.Objects;
 
 @Service
-public class ContaService implements IService<ContaDTO> {
+public class ContaService implements IService<ContaDTO, ContaRepository, ContaMapper> {
 
     private final ContaRepository repository;
     private final UsuarioService usuarioService;
@@ -101,6 +101,17 @@ public class ContaService implements IService<ContaDTO> {
         return contaDTO;
 
     }
+
+    @Override
+    public ContaRepository getRepository() {
+        return repository;
+    }
+
+    @Override
+    public ContaMapper getMapper() {
+        return mapper;
+    }
+
 
     public void atualizarSaldo(Double valor, Long id) throws NegocialException {
 

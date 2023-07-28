@@ -4,7 +4,7 @@ import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 @Getter
-public abstract class NegocialException extends Exception{
+public abstract class NegocialException extends Exception {
 
     private HttpStatus status = HttpStatus.BAD_REQUEST;
 

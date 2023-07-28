@@ -16,7 +16,7 @@ import org.springframework.util.StringUtils;
 import java.util.Objects;
 
 @Service
-public class UsuarioService implements IService<UsuarioDTO> {
+public class UsuarioService implements IService<UsuarioDTO, UsuarioRepository, UsuarioMapper> {
 
     private final UsuarioRepository repository;
     private final ContaService contaService;
@@ -81,5 +81,15 @@ public class UsuarioService implements IService<UsuarioDTO> {
 
         return usuarioDTO;
 
+    }
+
+    @Override
+    public UsuarioRepository getRepository() {
+        return repository;
+    }
+
+    @Override
+    public UsuarioMapper getMapper() {
+        return mapper;
     }
 }

@@ -3,8 +3,6 @@ package com.lvsr.organizer.app.api.controllers;
 import com.lvsr.organizer.app.dtos.UsuarioDTO;
 import com.lvsr.organizer.app.exceptions.NegocialException;
 import com.lvsr.organizer.app.interfaces.IController;
-import com.lvsr.organizer.app.mappers.UsuarioMapper;
-import com.lvsr.organizer.app.repositories.UsuarioRepository;
 import com.lvsr.organizer.app.services.UsuarioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -22,16 +20,10 @@ import java.util.Objects;
 @Tag(name = "usuarios")
 public class UsuarioRestController implements IController<UsuarioDTO> {
 
-    private final UsuarioRepository repository;
-
     private final UsuarioService service;
 
-    private final UsuarioMapper mapper;
-
-    public UsuarioRestController(UsuarioRepository repository, UsuarioService service, UsuarioMapper mapper) {
-        this.repository = repository;
+    public UsuarioRestController(UsuarioService service) {
         this.service = service;
-        this.mapper = mapper;
     }
 
     @Override
@@ -42,7 +34,7 @@ public class UsuarioRestController implements IController<UsuarioDTO> {
     @GetMapping
     public ResponseEntity<List<UsuarioDTO>> todos() {
 
-        return ResponseEntity.ok(repository.findAll().stream().map(mapper::toDto).toList());
+        return ResponseEntity.ok(service.getRepository().findAll().stream().map(usuario -> service.getMapper().toDto(usuario)).toList());
 
     }
 

@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Service
-public class LancamentoService implements IService<LancamentoDTO> {
+public class LancamentoService implements IService<LancamentoDTO, LancamentoRepository, LancamentoMapper> {
 
     private final LancamentoRepository repository;
 
@@ -61,9 +61,13 @@ public class LancamentoService implements IService<LancamentoDTO> {
 
         LancamentoDTO dto = recuperar(id);
 
-        operar(dto.getTipo().equals(TipoLancamentoEnum.ENTRADA) ? TipoLancamentoEnum.SAIDA : TipoLancamentoEnum.ENTRADA,
-                dto.getContaId(),
-                dto.getValor());
+        if(dto.getEfetivado()) {
+
+            operar(dto.getTipo().equals(TipoLancamentoEnum.ENTRADA) ? TipoLancamentoEnum.SAIDA : TipoLancamentoEnum.ENTRADA,
+                    dto.getContaId(),
+                    dto.getValor());
+
+        }
 
         repository.deleteById(dto.getId());
 
@@ -102,17 +106,27 @@ public class LancamentoService implements IService<LancamentoDTO> {
 
     }
 
+    @Override
+    public LancamentoRepository getRepository() {
+        return repository;
+    }
+
+    @Override
+    public LancamentoMapper getMapper() {
+        return mapper;
+    }
+
     public List<LancamentoDTO> recuperarLancamentosUsuario(Long userId) throws NegocialException {
 
         return repository.findByDonoId(usuarioService.recuperar(userId).getId()).stream().map(mapper::toDto).toList();
 
     }
 
-    public void excluirLancamentosConta(Long conta) {
+    public void excluirLancamentosConta(Long conta) throws NegocialException {
 
-        for (Lancamento lancamento : repository.findByContaId(conta)) {
+        for (Long lancamento : repository.findIdLancamentoByContaId(conta)) {
 
-            repository.deleteById(lancamento.getId());
+            excluir(lancamento);
 
         }
 
@@ -143,7 +157,7 @@ public class LancamentoService implements IService<LancamentoDTO> {
 
     }
 
-    private boolean compararOperar(LancamentoDTO dto, Lancamento entidade) throws NegocialException {
+    private void compararOperar(LancamentoDTO dto, Lancamento entidade) throws NegocialException {
 
         if (Objects.nonNull(entidade) && !dto.getValor().equals(entidade.getValor())) {
 
@@ -152,11 +166,8 @@ public class LancamentoService implements IService<LancamentoDTO> {
 
             operar(dto.getTipo(), dto.getContaId(), dto.getValor());
 
-            return true;
-
         }
 
-        return false;
     }
 
     private void operar(TipoLancamentoEnum tipo, Long contaId, Double valor) throws NegocialException {

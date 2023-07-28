@@ -24,16 +24,10 @@ import java.util.Objects;
 @Tag(name = "lancamentos")
 public class LancamentoRestController implements IController<LancamentoDTO> {
 
-    private final LancamentoRepository repository;
-
     private final LancamentoService service;
 
-    private final LancamentoMapper mapper;
-
-    public LancamentoRestController(LancamentoRepository repository, LancamentoService service, LancamentoMapper mapper) {
-        this.repository = repository;
+    public LancamentoRestController(LancamentoService service) {
         this.service = service;
-        this.mapper = mapper;
     }
 
     @Override
@@ -44,7 +38,7 @@ public class LancamentoRestController implements IController<LancamentoDTO> {
     @GetMapping
     public ResponseEntity<List<LancamentoDTO>> todos() {
 
-        return ResponseEntity.ok(repository.findAll().stream().map(mapper::toDto).toList());
+        return ResponseEntity.ok(service.getRepository().findAll().stream().map(lancamento -> service.getMapper().toDto(lancamento)).toList());
 
     }
 
@@ -75,7 +69,7 @@ public class LancamentoRestController implements IController<LancamentoDTO> {
     }
 
     @Override
-    @Operation(summary = "Salva o lançamento informado", method = "DELETE")
+    @Operation(summary = "Exclui o lançamento informado", method = "DELETE")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Requisição realizada com sucesso"),
             @ApiResponse(responseCode = "400", description = "Requisição mal formada")

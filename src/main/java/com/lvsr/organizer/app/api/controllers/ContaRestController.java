@@ -3,8 +3,6 @@ package com.lvsr.organizer.app.api.controllers;
 import com.lvsr.organizer.app.dtos.ContaDTO;
 import com.lvsr.organizer.app.exceptions.NegocialException;
 import com.lvsr.organizer.app.interfaces.IController;
-import com.lvsr.organizer.app.mappers.ContaMapper;
-import com.lvsr.organizer.app.repositories.ContaRepository;
 import com.lvsr.organizer.app.services.ContaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -22,16 +20,10 @@ import java.util.Objects;
 @Tag(name = "contas")
 public class ContaRestController implements IController<ContaDTO> {
 
-    private final ContaRepository repository;
-
     private final ContaService service;
 
-    private final ContaMapper mapper;
-
-    public ContaRestController(ContaRepository repository, ContaService service, ContaMapper mapper) {
-        this.repository = repository;
+    public ContaRestController(ContaService service) {
         this.service = service;
-        this.mapper = mapper;
     }
 
     @Override
@@ -42,7 +34,7 @@ public class ContaRestController implements IController<ContaDTO> {
     })
     public ResponseEntity<List<ContaDTO>> todos() {
 
-        return ResponseEntity.ok(repository.findAll().stream().map(mapper::toDto).toList());
+        return ResponseEntity.ok(service.getRepository().findAll().stream().map(conta -> service.getMapper().toDto(conta)).toList());
 
     }
 

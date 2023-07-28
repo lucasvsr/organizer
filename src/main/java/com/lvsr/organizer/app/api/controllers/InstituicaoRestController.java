@@ -3,8 +3,6 @@ package com.lvsr.organizer.app.api.controllers;
 import com.lvsr.organizer.app.dtos.InstituicaoDTO;
 import com.lvsr.organizer.app.exceptions.NegocialException;
 import com.lvsr.organizer.app.interfaces.IController;
-import com.lvsr.organizer.app.mappers.InstituicaoMapper;
-import com.lvsr.organizer.app.repositories.InstituicaoRepository;
 import com.lvsr.organizer.app.services.InstituicaoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -22,16 +20,10 @@ import java.util.Objects;
 @Tag(name = "instituicoes")
 public class InstituicaoRestController implements IController<InstituicaoDTO> {
 
-    private final InstituicaoRepository repository;
-
     private final InstituicaoService service;
 
-    private final InstituicaoMapper mapper;
-
-    public InstituicaoRestController(InstituicaoRepository repository, InstituicaoService service, InstituicaoMapper mapper) {
-        this.repository = repository;
+    public InstituicaoRestController(InstituicaoService service) {
         this.service = service;
-        this.mapper = mapper;
     }
 
     @Override
@@ -42,7 +34,7 @@ public class InstituicaoRestController implements IController<InstituicaoDTO> {
     @GetMapping
     public ResponseEntity<List<InstituicaoDTO>> todos() {
 
-        return ResponseEntity.ok(repository.findAll().stream().map(mapper::toDto).toList());
+        return ResponseEntity.ok(service.getRepository().findAll().stream().map(instituicao -> service.getMapper().toDto(instituicao)).toList());
 
     }
 
