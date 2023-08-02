@@ -17,4 +17,5 @@ public interface LancamentoRepository extends JpaRepository<Lancamento, Long> {
     @Query("SELECT o.id FROM lancamentos o WHERE o.conta.id = :id")
     List<Long> findIdLancamentoByContaId(@Param("id") Long id);
 
+    List<Lancamento> findByContaId(Long id);
 }

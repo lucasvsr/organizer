@@ -4,16 +4,14 @@ import com.lvsr.organizer.app.dtos.EfetivaLancamentoDTO;
 import com.lvsr.organizer.app.dtos.LancamentoDTO;
 import com.lvsr.organizer.app.exceptions.NegocialException;
 import com.lvsr.organizer.app.interfaces.IController;
-import com.lvsr.organizer.app.mappers.LancamentoMapper;
-import com.lvsr.organizer.app.repositories.LancamentoRepository;
 import com.lvsr.organizer.app.services.LancamentoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -100,9 +98,21 @@ public class LancamentoRestController implements IController<LancamentoDTO> {
             @ApiResponse(responseCode = "400", description = "Requisição mal formada")
     })
     @PutMapping("/efetivar")
-    public ResponseEntity<?> efetivar(@Valid @RequestBody EfetivaLancamentoDTO dto) throws NegocialException {
+    public ResponseEntity<?> efetivar(@Validated @RequestBody EfetivaLancamentoDTO dto) throws NegocialException {
 
         return ResponseEntity.ok(service.efetivar(dto));
+
+    }
+
+    @Operation(summary = "Retorna os lançamentos da conta informada", method = "GET")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Requisição realizada com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Requisição não encontrada")
+    })
+    @GetMapping("/conta/{id}")
+    public ResponseEntity<?> recuperaLancamentosConta(@PathVariable("id") Long conta) throws NegocialException {
+
+        return ResponseEntity.ok(service.recuperarLancamentosConta(conta));
 
     }
 

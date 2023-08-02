@@ -1,7 +1,6 @@
 package com.lvsr.organizer.app.services;
 
 import com.lvsr.organizer.app.dtos.ContaDTO;
-import com.lvsr.organizer.app.dtos.InstituicaoDTO;
 import com.lvsr.organizer.app.dtos.UsuarioDTO;
 import com.lvsr.organizer.app.exceptions.*;
 import com.lvsr.organizer.app.interfaces.IService;
@@ -18,11 +17,8 @@ public class ContaService implements IService<ContaDTO, ContaRepository, ContaMa
 
     private final ContaRepository repository;
     private final UsuarioService usuarioService;
-
     private final InstituicaoService instituicaoService;
-
     private final LancamentoService lancamentoService;
-
     private final ContaMapper mapper;
 
     public ContaService(ContaRepository repository,
@@ -75,14 +71,17 @@ public class ContaService implements IService<ContaDTO, ContaRepository, ContaMa
         boolean temId = Objects.nonNull(contaDTO.getId());
         Conta conta = temId ? mapper.toModel(recuperar(contaDTO.getId())) : null;
         UsuarioDTO dono;
-        InstituicaoDTO instituicao = instituicaoService.recuperar(contaDTO.getInstituicaoId());
 
         try {
 
             dono = usuarioService.recuperar(contaDTO.getDonoId());
 
+            instituicaoService.recuperar(contaDTO.getInstituicaoId());
+
             if (Objects.nonNull(conta) && !conta.getDono().getId().equals(dono.getId())) {
+
                 throw new ContaComDonoErradoException();
+
             }
 
             if (!temId && Objects.nonNull(dono.getContas()) && dono.getContas().stream().anyMatch(c -> c.getTipo().equals(contaDTO.getTipo()) &&

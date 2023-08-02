@@ -19,11 +19,8 @@ import java.util.Objects;
 public class LancamentoService implements IService<LancamentoDTO, LancamentoRepository, LancamentoMapper> {
 
     private final LancamentoRepository repository;
-
     private final LancamentoMapper mapper;
-
     private final ContaService contaService;
-
     private final UsuarioService usuarioService;
 
     public LancamentoService(LancamentoRepository repository, LancamentoMapper mapper, ContaService contaService, UsuarioService usuarioService) {
@@ -46,7 +43,7 @@ public class LancamentoService implements IService<LancamentoDTO, LancamentoRepo
 
         }
 
-        if(lancamentoDTO.getEfetivado() && (Objects.nonNull(lancamento) && !lancamento.getEfetivado() || Objects.isNull(lancamento))) {
+        if (lancamentoDTO.getEfetivado() && (Objects.nonNull(lancamento) && !lancamento.getEfetivado() || Objects.isNull(lancamento))) {
 
             operar(lancamentoDTO.getTipo(), lancamentoDTO.getContaId(), lancamentoDTO.getValor());
 
@@ -59,19 +56,19 @@ public class LancamentoService implements IService<LancamentoDTO, LancamentoRepo
     @Override
     public LancamentoDTO excluir(Long id) throws NegocialException {
 
-        LancamentoDTO dto = recuperar(id);
+        LancamentoDTO lancamento = recuperar(id);
 
-        if(dto.getEfetivado()) {
+        if (lancamento.getEfetivado()) {
 
-            operar(dto.getTipo().equals(TipoLancamentoEnum.ENTRADA) ? TipoLancamentoEnum.SAIDA : TipoLancamentoEnum.ENTRADA,
-                    dto.getContaId(),
-                    dto.getValor());
+            operar(lancamento.getTipo().equals(TipoLancamentoEnum.ENTRADA) ? TipoLancamentoEnum.SAIDA : TipoLancamentoEnum.ENTRADA,
+                    lancamento.getContaId(),
+                    lancamento.getValor());
 
         }
 
-        repository.deleteById(dto.getId());
+        repository.deleteById(lancamento.getId());
 
-        return dto;
+        return lancamento;
 
     }
 
@@ -184,4 +181,9 @@ public class LancamentoService implements IService<LancamentoDTO, LancamentoRepo
 
     }
 
+    public List<LancamentoDTO> recuperarLancamentosConta(Long conta) throws NegocialException {
+
+        return repository.findByContaId(contaService.recuperar(conta).getId()).stream().map(mapper::toDto).toList();
+
+    }
 }
