@@ -9,10 +9,12 @@ import com.lvsr.organizer.app.interfaces.IService;
 import com.lvsr.organizer.app.mappers.UsuarioMapper;
 import com.lvsr.organizer.app.models.Usuario;
 import com.lvsr.organizer.app.repositories.UsuarioRepository;
+import com.lvsr.organizer.app.utils.Util;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.NoSuchElementException;
 import java.util.Objects;
 
 @Service
@@ -57,13 +59,15 @@ public class UsuarioService implements IService<UsuarioDTO, UsuarioRepository, U
     @Override
     public UsuarioDTO recuperar(Long id) throws NegocialException {
 
-        if (id == null || id == 0L) {
+        try {
+
+            return mapper.toDto(repository.findById(Util.notZeroOrNull(id)).get());
+
+        } catch (NullPointerException | NoSuchElementException e) {
 
             throw new UsuarioNaoEncontradoException();
 
         }
-
-        return mapper.toDto(repository.findById(id).orElseThrow(UsuarioNaoEncontradoException::new));
 
     }
 

@@ -7,9 +7,11 @@ import com.lvsr.organizer.app.interfaces.IService;
 import com.lvsr.organizer.app.mappers.ContaMapper;
 import com.lvsr.organizer.app.models.Conta;
 import com.lvsr.organizer.app.repositories.ContaRepository;
+import com.lvsr.organizer.app.utils.Util;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
+import java.util.NoSuchElementException;
 import java.util.Objects;
 
 @Service
@@ -55,13 +57,15 @@ public class ContaService implements IService<ContaDTO, ContaRepository, ContaMa
     @Override
     public ContaDTO recuperar(Long id) throws NegocialException {
 
-        if (id == null || id == 0L) {
+        try {
+
+            return mapper.toDto(repository.findById(Util.notZeroOrNull(id)).get());
+
+        } catch (NullPointerException | NoSuchElementException e) {
 
             throw new ContaInexistenteException();
 
         }
-
-        return mapper.toDto(repository.findById(id).orElseThrow(ContaInexistenteException::new));
 
     }
 

@@ -7,7 +7,10 @@ import com.lvsr.organizer.app.exceptions.NegocialException;
 import com.lvsr.organizer.app.interfaces.IService;
 import com.lvsr.organizer.app.mappers.InstituicaoMapper;
 import com.lvsr.organizer.app.repositories.InstituicaoRepository;
+import com.lvsr.organizer.app.utils.Util;
 import org.springframework.stereotype.Service;
+
+import java.util.NoSuchElementException;
 
 @Service
 public class InstituicaoService implements IService<InstituicaoDTO, InstituicaoRepository, InstituicaoMapper> {
@@ -48,13 +51,15 @@ public class InstituicaoService implements IService<InstituicaoDTO, InstituicaoR
     @Override
     public InstituicaoDTO recuperar(Long id) throws NegocialException {
 
-        if (id == null || id == 0L) {
+        try {
+
+            return mapper.toDto(repository.findById(Util.notZeroOrNull(id)).get());
+
+        } catch (NullPointerException | NoSuchElementException e) {
 
             throw new InstituicaoNaoEncontradaException();
 
         }
-
-        return mapper.toDto(repository.findById(id).orElseThrow(InstituicaoNaoEncontradaException::new));
 
     }
 

@@ -9,10 +9,12 @@ import com.lvsr.organizer.app.interfaces.IService;
 import com.lvsr.organizer.app.mappers.LancamentoMapper;
 import com.lvsr.organizer.app.models.Lancamento;
 import com.lvsr.organizer.app.repositories.LancamentoRepository;
+import com.lvsr.organizer.app.utils.Util;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 
 @Service
@@ -75,13 +77,15 @@ public class LancamentoService implements IService<LancamentoDTO, LancamentoRepo
     @Override
     public LancamentoDTO recuperar(Long id) throws NegocialException {
 
-        if (id == null || id == 0L) {
+        try {
+
+            return mapper.toDto(repository.findById(Util.notZeroOrNull(id)).get());
+
+        } catch (NullPointerException | NoSuchElementException e) {
 
             throw new LancamentoNaoEncontradoException();
 
         }
-
-        return mapper.toDto(repository.findById(id).orElseThrow(LancamentoNaoEncontradoException::new));
 
     }
 
